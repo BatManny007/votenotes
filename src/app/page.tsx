@@ -90,7 +90,7 @@ export default function Home() {
             Let your quiet members actually be heard.
           </h1>
           <p className="text-[#555] text-lg max-w-xl mb-10">
-            Built for small group and ministry leaders. Suggest ideas anonymously, vote
+            Built for small group leaders. Suggest ideas anonymously, vote
             anonymously, and see what your group actually thinks — no signup, no awkward
             silence in the room.
           </p>
