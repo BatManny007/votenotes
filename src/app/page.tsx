@@ -29,7 +29,7 @@ type Note = {
 const NOTES: Note[] = [
   { num: "01", title: "Movie night", emoji: "🎬", tone: "peach", pin: "orange", top: "0%", left: "3%", w: "45%", rot: "-3deg", z: 5 },
   { num: "02", title: "Board games", emoji: "🎲", tone: "lav", pin: "purple", top: "12%", left: "54%", w: "44%", rot: "3deg", z: 4 },
-  { num: "03", title: "Beach day", emoji: "🌴", tone: "blue", pin: "blue", top: "32%", left: "0%", w: "44%", rot: "-2deg", z: 6 },
+  { num: "03", title: "Beach day", emoji: "🌴", tone: "blue", pin: "purple", top: "32%", left: "0%", w: "44%", rot: "-2deg", z: 6 },
   { num: "04", title: "Pizza night", emoji: "🍕", tone: "peach", pin: "orange", top: "48%", left: "53%", w: "45%", rot: "2deg", z: 5 },
   { num: "05", title: "Hiking trip", emoji: "⛰️", tone: "lav", pin: "purple", top: "68%", left: "13%", w: "47%", rot: "-4deg", z: 7, badge: true },
 ];
