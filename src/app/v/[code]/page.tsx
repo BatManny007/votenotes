@@ -141,7 +141,7 @@ export default function SessionPage() {
               <button onClick={() => router.push("/")} className="text-xs text-[#888] hover:text-[#111] transition-colors mb-1 cursor-pointer">
                 ← VoteNotes
               </button>
-              <h1 className="font-serif text-2xl text-[#111111] break-words">{session.name}</h1>
+              <h1 className="font-serif text-4xl sm:text-5xl text-[#111111] break-words leading-tight">{session.name}</h1>
               {session.description && (
                 <p className="text-sm text-[#666] mt-0.5 break-words">{session.description}</p>
               )}
