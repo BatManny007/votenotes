@@ -136,17 +136,17 @@ export default function SessionPage() {
       {/* Header */}
       <div className="border-b border-[#D9D9D9] px-6 py-5">
         <div className="max-w-3xl mx-auto flex flex-col gap-2">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <div className="min-w-0">
               <button onClick={() => router.push("/")} className="text-xs text-[#888] hover:text-[#111] transition-colors mb-1 cursor-pointer">
                 ← VoteNotes
               </button>
-              <h1 className="font-serif text-2xl text-[#111111]">{session.name}</h1>
+              <h1 className="font-serif text-2xl text-[#111111] break-words">{session.name}</h1>
               {session.description && (
-                <p className="text-sm text-[#666] mt-0.5">{session.description}</p>
+                <p className="text-sm text-[#666] mt-0.5 break-words">{session.description}</p>
               )}
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 flex-wrap">
               <button
                 onClick={copyLink}
                 className="border border-[#D9D9D9] text-[#111111] px-4 py-2 rounded-full text-xs hover:border-[#111] transition-colors cursor-pointer"
