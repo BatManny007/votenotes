@@ -32,3 +32,262 @@ body {
 .landing {
   font-family: 'Hanken Grotesk', system-ui, sans-serif;
 }
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.985);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes reveal-down {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes soft-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes board-assemble {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateX(8deg) scale(0.975);
+    filter: blur(7px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) rotateX(0deg) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes section-rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes note-place {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--from-x), var(--from-y), 0) rotate(var(--from-rot)) scale(0.92);
+    filter: blur(6px);
+  }
+  68% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(calc(var(--note-rot) + 2deg)) scale(1.012);
+    filter: blur(0);
+  }
+  84% {
+    transform: translate3d(0, 0, 0) rotate(calc(var(--note-rot) - 1deg)) scale(0.996);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(var(--note-rot)) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes pin-drop {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -34%, 0) scale(0.55) rotate(-16deg);
+    filter: blur(1px);
+  }
+  72% {
+    opacity: 1;
+    transform: translate3d(-50%, 2%, 0) scale(1.08) rotate(4deg);
+    filter: blur(0);
+  }
+  88% {
+    transform: translate3d(-50%, -1%, 0) scale(0.98) rotate(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes pin-shadow {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes note-label-rise {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(120%);
+  }
+}
+
+.reveal-up {
+  animation: reveal-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.reveal-down {
+  animation: reveal-down 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.soft-pop {
+  animation: soft-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.board-assemble {
+  animation: board-assemble 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+  transform-style: preserve-3d;
+}
+
+.section-rise {
+  animation: section-rise 0.88s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.note-place {
+  animation: note-place 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.pin-drop {
+  animation: pin-drop 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+  transform-origin: 50% 0%;
+}
+
+.pin-shadow {
+  animation: pin-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.note-label-rise {
+  animation: note-label-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.scroll-reveal {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+.scroll-reveal.lift {
+  transform: translate3d(0, 26px, 0);
+  filter: blur(8px);
+}
+
+.scroll-reveal.pop {
+  transform: scale(0.96);
+  filter: blur(7px);
+}
+
+.scroll-reveal.board {
+  transform: perspective(1200px) rotateX(8deg) scale(0.975);
+  filter: blur(7px);
+  transform-style: preserve-3d;
+}
+
+.scroll-reveal.fade-down {
+  transform: translate3d(0, -12px, 0);
+  filter: blur(6px);
+}
+
+.scroll-reveal.is-visible.lift {
+  animation: section-rise 0.88s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.scroll-reveal.is-visible.pop {
+  animation: soft-pop 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.scroll-reveal.is-visible.board {
+  animation: board-assemble 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.scroll-reveal.is-visible.fade-down {
+  animation: reveal-down 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.34) 50%, transparent 100%);
+  transform: translateX(-120%);
+  animation: shimmer 4.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up,
+  .reveal-down,
+  .soft-pop,
+  .board-assemble,
+  .section-rise,
+  .note-place,
+  .pin-drop,
+  .pin-shadow,
+  .note-label-rise,
+  .scroll-reveal,
+  .shine::after {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

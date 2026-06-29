@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { generateCode, setHostKey } from "@/lib/utils";
@@ -66,6 +66,31 @@ const FEATURES = [
 
 const muted = "rgb(139, 134, 124)";
 
+function useScrollReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || visible) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [visible]);
+
+  return { ref, visible } as const;
+}
+
 export default function Home() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -76,6 +101,11 @@ export default function Home() {
   const [view, setView] = useState<"home" | "create">("home");
   const [error, setError] = useState("");
   const [openFaq, setOpenFaq] = useState(0);
+  const stepsReveal = useScrollReveal<HTMLElement>();
+  const featuresReveal = useScrollReveal<HTMLElement>();
+  const howReveal = useScrollReveal<HTMLElement>();
+  const faqReveal = useScrollReveal<HTMLElement>();
+  const footerReveal = useScrollReveal<HTMLElement>();
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -157,20 +187,20 @@ export default function Home() {
       style={{ background: "rgb(244, 242, 237)", color: "rgb(27, 26, 22)", fontSize: 16, lineHeight: 1.5, overflowX: "hidden" }}
     >
       {/* Nav */}
-      <header style={{ position: "sticky", top: 0, zIndex: 60, backdropFilter: "blur(12px)", background: "rgba(244, 242, 237, 0.8)", borderBottom: "1px solid rgb(232, 228, 219)" }}>
+      <header className="reveal-down" style={{ ["--delay" as string]: "40ms", position: "sticky", top: 0, zIndex: 60, backdropFilter: "blur(12px)", background: "rgba(244, 242, 237, 0.8)", borderBottom: "1px solid rgb(232, 228, 219)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "15px clamp(18px, 4vw, 40px)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20 }}>
-          <a href="#top" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <a href="#top" className="reveal-up" style={{ ["--delay" as string]: "100ms", display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ display: "inline-flex", width: 30, height: 30, border: "2px solid", borderRadius: 8, alignItems: "center", justifyContent: "center" }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 12.5 10 18 20 5.5" /></svg>
             </span>
             <span style={{ fontWeight: 800, fontSize: 20, letterSpacing: "-0.02em" }}>VoteNotes</span>
           </a>
-          <nav className="hidden min-[880px]:flex" style={{ alignItems: "center", gap: 28 }}>
+          <nav className="hidden min-[880px]:flex reveal-up" style={{ ["--delay" as string]: "160ms", alignItems: "center", gap: 28 }}>
             {[["How it works", "#how"], ["Features", "#features"], ["FAQ", "#faq"]].map(([l, h]) => (
               <a key={l} href={h} style={{ color: "rgb(94, 90, 82)", fontSize: 14, fontWeight: 600 }}>{l}</a>
             ))}
           </nav>
-          <button onClick={startSession} className="cursor-pointer" style={{ background: "rgb(27, 26, 22)", color: "rgb(244, 242, 237)", fontWeight: 600, fontSize: 15, padding: "11px 20px", borderRadius: 999 }}>
+          <button onClick={startSession} className="cursor-pointer reveal-up shine" style={{ ["--delay" as string]: "220ms", background: "rgb(27, 26, 22)", color: "rgb(244, 242, 237)", fontWeight: 600, fontSize: 15, padding: "11px 20px", borderRadius: 999 }}>
             Create session
           </button>
         </div>
@@ -179,9 +209,9 @@ export default function Home() {
       <a id="top" />
 
       {/* Hero */}
-      <section style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(36px, 6vw, 76px) clamp(18px, 4vw, 40px) clamp(40px, 5vw, 64px)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "clamp(28px, 4vw, 56px)" }}>
-        <div style={{ flex: "1 1 420px", minWidth: 300 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", border: "1px solid rgb(233, 229, 220)", borderRadius: 999, padding: "5px 14px 5px 6px", boxShadow: "rgba(0,0,0,0.03) 0px 1px 2px" }}>
+      <section className="section-rise" style={{ ["--delay" as string]: "120ms", maxWidth: 1200, margin: "0 auto", padding: "clamp(36px, 6vw, 76px) clamp(18px, 4vw, 40px) clamp(40px, 5vw, 64px)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "clamp(28px, 4vw, 56px)" }}>
+        <div className="section-rise" style={{ ["--delay" as string]: "240ms", flex: "1 1 420px", minWidth: 300 }}>
+          <div className="reveal-up" style={{ ["--delay" as string]: "220ms", display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", border: "1px solid rgb(233, 229, 220)", borderRadius: 999, padding: "5px 14px 5px 6px", boxShadow: "rgba(0,0,0,0.03) 0px 1px 2px" }}>
             <span style={{ display: "inline-flex" }}>
               {[["AK", "rgb(241,201,168)", "rgb(122,74,34)", 0], ["M", "rgb(199,190,234)", "rgb(75,58,134)", -9], ["J", "rgb(169,203,230)", "rgb(40,75,107)", -9]].map(([t, bg, col, ml]) => (
                 <span key={t as string} style={{ width: 26, height: 26, borderRadius: "50%", background: bg as string, border: "2px solid rgb(244,242,237)", marginLeft: ml as number, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: col as string }}>{t}</span>
@@ -190,17 +220,17 @@ export default function Home() {
             <span style={{ fontSize: 13, fontWeight: 600, color: "rgb(90, 86, 79)" }}>Loved by small group leaders</span>
           </div>
 
-          <h1 style={{ fontFamily: "Newsreader, Georgia, serif", fontWeight: 500, fontSize: "clamp(42px, 7vw, 82px)", lineHeight: 1.02, letterSpacing: "-0.02em", margin: "22px 0 0" }}>
+          <h1 className="reveal-up" style={{ ["--delay" as string]: "320ms", fontFamily: "Newsreader, Georgia, serif", fontWeight: 500, fontSize: "clamp(42px, 7vw, 82px)", lineHeight: 1.02, letterSpacing: "-0.02em", margin: "22px 0 0" }}>
             Let your quiet members actually be{" "}
             <span style={{ fontStyle: "italic", borderBottom: "3px solid", paddingBottom: 2 }}>heard.</span>
           </h1>
 
-          <p style={{ color: "rgb(94, 90, 82)", fontSize: "clamp(16px, 1.5vw, 18px)", lineHeight: 1.6, maxWidth: 480, margin: "24px 0 0" }}>
+          <p className="reveal-up" style={{ ["--delay" as string]: "410ms", color: "rgb(94, 90, 82)", fontSize: "clamp(16px, 1.5vw, 18px)", lineHeight: 1.6, maxWidth: 480, margin: "24px 0 0" }}>
             Built for small group leaders. Suggest ideas anonymously, vote anonymously, and see what your group actually thinks — no signup, no awkward silence in the room.
           </p>
 
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "32px 0 0" }}>
-            <button onClick={startSession} className="cursor-pointer" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgb(27, 26, 22)", color: "rgb(244, 242, 237)", fontWeight: 600, fontSize: 16, padding: "15px 24px", borderRadius: 999 }}>
+          <div className="reveal-up" style={{ ["--delay" as string]: "500ms", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "32px 0 0" }}>
+            <button onClick={startSession} className="cursor-pointer shine" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgb(27, 26, 22)", color: "rgb(244, 242, 237)", fontWeight: 600, fontSize: 16, padding: "15px 24px", borderRadius: 999 }}>
               Start a session
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="19" y2="12" /><polyline points="13 6 19 12 13 18" /></svg>
             </button>
@@ -215,17 +245,17 @@ export default function Home() {
               <button type="submit" className="cursor-pointer" style={{ background: "rgb(241, 238, 231)", border: "1px solid rgb(228, 223, 213)", color: "inherit", fontWeight: 600, fontSize: 15, padding: "10px 18px", borderRadius: 999 }}>Join</button>
             </form>
           </div>
-          {error && <p className="text-sm" style={{ color: "#b00020", marginTop: 14 }}>{error}</p>}
+          {error && <p className="text-sm reveal-up" style={{ ["--delay" as string]: "600ms", color: "#b00020", marginTop: 14 }}>{error}</p>}
 
-          <div style={{ display: "flex", alignItems: "center", gap: 9, margin: "22px 0 0", color: "rgb(107, 103, 95)", fontSize: 14, fontWeight: 500 }}>
+          <div className="reveal-up" style={{ ["--delay" as string]: "610ms", display: "flex", alignItems: "center", gap: 9, margin: "22px 0 0", color: "rgb(107, 103, 95)", fontSize: 14, fontWeight: 500 }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" /></svg>
             <span>No account.&nbsp;&nbsp;No ads.&nbsp;&nbsp;Fully anonymous.</span>
           </div>
         </div>
 
         {/* Pinboard */}
-        <div style={{ flex: "1 1 420px", minWidth: 300, display: "flex", justifyContent: "center" }}>
-          <div style={{ position: "relative", width: "100%", maxWidth: 560, aspectRatio: "1 / 1.04", containerType: "size" }}>
+        <div className="section-rise" style={{ ["--delay" as string]: "280ms", flex: "1 1 420px", minWidth: 300, display: "flex", justifyContent: "center" }}>
+          <div className="board-assemble" style={{ ["--delay" as string]: "340ms", position: "relative", width: "100%", maxWidth: 560, aspectRatio: "1 / 1.04", containerType: "size" }}>
             <svg viewBox="0 0 100 104" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible", pointerEvents: "none" }}>
               <path d="M52 22 C66 24 70 28 74 32" fill="none" stroke="#C8C2B6" strokeWidth=".4" strokeDasharray="2 2" />
               <path d="M40 40 C30 44 30 52 38 58" fill="none" stroke="#C8C2B6" strokeWidth=".4" strokeDasharray="2 2" />
@@ -233,28 +263,57 @@ export default function Home() {
             </svg>
 
             {NOTES.map((n) => (
-              <div key={n.num} style={{ position: "absolute", top: n.top, left: n.left, width: n.w, transform: `rotate(${n.rot})`, zIndex: n.z }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={PIN_IMG[n.pin]}
-                  alt=""
-                  aria-hidden="true"
-                  style={{ position: "absolute", left: "50%", top: PIN_POS[n.pin].top, transform: "translateX(-50%)", width: PIN_POS[n.pin].width, height: "auto", zIndex: 9, pointerEvents: "none", filter: "drop-shadow(0 1.6cqw 1.4cqw rgba(40,30,20,0.22))" }}
-                />
-                <div style={{ position: "relative", background: CARD_BG[n.tone], borderRadius: "4.5cqw", padding: "5.4cqw 5cqw 4.8cqw", boxShadow: "0 9cqw 20cqw -8cqw rgba(60,45,30,.32)" }}>
-                  <div style={{ fontFamily: "Caveat, cursive", fontWeight: 700, fontSize: "8cqw", lineHeight: 1, color: NUM_COL[n.pin] }}>{n.num}</div>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2cqw", marginTop: "0.6cqw" }}>
-                    <span style={{ fontWeight: 700, fontSize: "4.5cqw", letterSpacing: "-0.02em", color: "rgb(33, 31, 26)", whiteSpace: "nowrap" }}>{n.title}</span>
-                    <span style={{ fontSize: "5.6cqw", lineHeight: 1 }}>{n.emoji}</span>
-                  </div>
-                  {n.badge ? (
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: "1.4cqw", marginTop: "3cqw", background: "rgba(123, 90, 224, 0.16)", color: "rgb(91, 63, 191)", fontWeight: 700, fontSize: "3.1cqw", padding: "1.4cqw 2.6cqw", borderRadius: 999 }}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 12 10 18 20 6" /></svg>
-                      Most voted
+              <div
+                key={n.num}
+                className="note-place"
+                style={{
+                  ["--delay" as string]: `${500 + Number(n.num) * 105}ms`,
+                  ["--note-rot" as string]: n.rot,
+                  ["--from-x" as string]: Number(n.num) % 2 === 1 ? "-26px" : "22px",
+                  ["--from-y" as string]: Number(n.num) <= 2 ? "-26px" : "26px",
+                  ["--from-rot" as string]: Number(n.num) % 2 === 1 ? "-10deg" : "12deg",
+                  position: "absolute",
+                  top: n.top,
+                  left: n.left,
+                  width: n.w,
+                  zIndex: n.z,
+                }}
+              >
+                <div style={{ position: "relative" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={PIN_IMG[n.pin]}
+                    alt=""
+                    aria-hidden="true"
+                    className="pin-drop"
+                    style={{
+                      ["--delay" as string]: `${700 + Number(n.num) * 105}ms`,
+                      position: "absolute",
+                      left: "50%",
+                      top: PIN_POS[n.pin].top,
+                      transform: "translateX(-50%)",
+                      width: PIN_POS[n.pin].width,
+                      height: "auto",
+                      zIndex: 9,
+                      pointerEvents: "none",
+                      filter: "drop-shadow(0 1.6cqw 1.4cqw rgba(40,30,20,0.22))",
+                    }}
+                  />
+                  <div className="pin-shadow" style={{ ["--delay" as string]: `${540 + Number(n.num) * 105}ms`, position: "relative", background: CARD_BG[n.tone], borderRadius: "4.5cqw", padding: "5.4cqw 5cqw 4.8cqw", boxShadow: "0 9cqw 20cqw -8cqw rgba(60,45,30,.32)" }}>
+                    <div style={{ fontFamily: "Caveat, cursive", fontWeight: 700, fontSize: "8cqw", lineHeight: 1, color: NUM_COL[n.pin] }}>{n.num}</div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2cqw", marginTop: "0.6cqw" }}>
+                      <span style={{ fontWeight: 700, fontSize: "4.5cqw", letterSpacing: "-0.02em", color: "rgb(33, 31, 26)", whiteSpace: "nowrap" }}>{n.title}</span>
+                      <span style={{ fontSize: "5.6cqw", lineHeight: 1 }}>{n.emoji}</span>
                     </div>
-                  ) : (
-                    <div style={{ marginTop: "3.4cqw", fontSize: "3.1cqw", color: "rgb(154, 147, 135)", fontWeight: 500 }}>Suggested by someone</div>
-                  )}
+                    {n.badge ? (
+                      <div className="note-label-rise" style={{ ["--delay" as string]: `${880 + Number(n.num) * 105}ms`, display: "inline-flex", alignItems: "center", gap: "1.4cqw", marginTop: "3cqw", background: "rgba(123, 90, 224, 0.16)", color: "rgb(91, 63, 191)", fontWeight: 700, fontSize: "3.1cqw", padding: "1.4cqw 2.6cqw", borderRadius: 999 }}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 12 10 18 20 6" /></svg>
+                        Most voted
+                      </div>
+                    ) : (
+                      <div className="note-label-rise" style={{ ["--delay" as string]: `${880 + Number(n.num) * 105}ms`, marginTop: "3.4cqw", fontSize: "3.1cqw", color: "rgb(154, 147, 135)", fontWeight: 500 }}>Suggested by someone</div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -269,10 +328,10 @@ export default function Home() {
 
       <div style={{ backgroundImage: "linear-gradient(rgba(0,0,0,0.027) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.027) 1px, transparent 1px)", backgroundSize: "42px 42px" }}>
         {/* Steps */}
-        <section style={{ maxWidth: 1200, margin: "0 auto", padding: "clamp(34px, 4vw, 52px) clamp(18px, 4vw, 40px)", borderTop: "1px solid rgb(232, 228, 219)" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "clamp(14px, 2vw, 26px)" }}>
+        <section ref={stepsReveal.ref} className={`scroll-reveal lift ${stepsReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "60ms", maxWidth: 1200, margin: "0 auto", padding: "clamp(34px, 4vw, 52px) clamp(18px, 4vw, 40px)", borderTop: "1px solid rgb(232, 228, 219)" }}>
+          <div className={`scroll-reveal pop ${stepsReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "130ms", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "clamp(14px, 2vw, 26px)" }}>
             {STEPS.map((s) => (
-              <div key={s.n} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div key={s.n} className={`scroll-reveal lift ${stepsReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: `${220 + Number(s.n) * 120}ms`, display: "flex", alignItems: "center", gap: 14 }}>
                 <span style={{ flex: "0 0 auto", width: 42, height: 42, borderRadius: "50%", border: "1px solid rgb(225, 220, 210)", background: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 17 }}>{s.n}</span>
                 <span>
                   <span style={{ display: "block", fontWeight: 700, fontSize: 15.5, letterSpacing: "-0.01em" }}>{s.title}</span>
@@ -287,10 +346,10 @@ export default function Home() {
         </section>
 
         {/* Features */}
-        <section id="features" style={{ maxWidth: 1140, margin: "0 auto", padding: "0 clamp(18px, 4vw, 40px) clamp(30px, 4vw, 48px)" }}>
-          <div style={{ background: "#fff", border: "1px solid rgb(234, 230, 221)", borderRadius: 26, boxShadow: "rgba(40,30,20,0.25) 0px 24px 50px -34px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", overflow: "hidden" }}>
+        <section ref={featuresReveal.ref} id="features" className={`scroll-reveal lift ${featuresReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "80ms", maxWidth: 1140, margin: "0 auto", padding: "0 clamp(18px, 4vw, 40px) clamp(30px, 4vw, 48px)" }}>
+          <div className={`scroll-reveal board ${featuresReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "170ms", background: "#fff", border: "1px solid rgb(234, 230, 221)", borderRadius: 26, boxShadow: "rgba(40,30,20,0.25) 0px 24px 50px -34px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", overflow: "hidden" }}>
             {FEATURES.map((f, i) => (
-              <div key={f.title} style={{ padding: "34px 26px", textAlign: "center", borderRight: i < FEATURES.length - 1 ? "1px solid rgb(239, 235, 227)" : undefined }}>
+              <div key={f.title} className={`scroll-reveal lift ${featuresReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: `${260 + i * 120}ms`, padding: "34px 26px", textAlign: "center", borderRight: i < FEATURES.length - 1 ? "1px solid rgb(239, 235, 227)" : undefined }}>
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
                   <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{f.icon}</svg>
                 </div>
@@ -302,13 +361,13 @@ export default function Home() {
         </section>
 
         {/* How it works */}
-        <section id="how" style={{ maxWidth: 1140, margin: "0 auto", padding: "clamp(14px, 2vw, 28px) clamp(18px, 4vw, 40px) clamp(40px, 5vw, 64px)" }}>
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 30 }}>
+        <section ref={howReveal.ref} id="how" className={`scroll-reveal lift ${howReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "80ms", maxWidth: 1140, margin: "0 auto", padding: "clamp(14px, 2vw, 28px) clamp(18px, 4vw, 40px) clamp(40px, 5vw, 64px)" }}>
+          <div className={`scroll-reveal pop ${howReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "170ms", display: "flex", justifyContent: "center", marginBottom: 30 }}>
             <span style={{ background: "#fff", border: "1px solid rgb(233, 229, 220)", borderRadius: 999, padding: "7px 16px", fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", color: "rgb(122, 117, 107)" }}>HOW IT WORKS</span>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "clamp(10px, 1.4vw, 16px)" }}>
             {HOW.map((h) => (
-              <div key={h.n} style={{ background: h.bg, border: "1px solid rgba(0,0,0,0.04)", borderRadius: 16, padding: "20px 18px" }}>
+              <div key={h.n} className={`scroll-reveal lift ${howReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: `${250 + Number(h.n) * 120}ms`, background: h.bg, border: "1px solid rgba(0,0,0,0.04)", borderRadius: 16, padding: "20px 18px" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 38, height: 38, borderRadius: 11, background: "rgba(255,255,255,0.7)", fontSize: 17 }}>{h.icon}</span>
                   <span style={{ fontWeight: 700, fontSize: 13, color: "rgb(163, 156, 142)" }}>{h.n}</span>
@@ -321,13 +380,13 @@ export default function Home() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" style={{ maxWidth: 760, margin: "0 auto", padding: "0 clamp(18px, 4vw, 40px) clamp(48px, 6vw, 72px)" }}>
-          <h2 style={{ fontFamily: "Newsreader, serif", fontWeight: 500, fontSize: "clamp(30px, 4vw, 44px)", letterSpacing: "-0.02em", textAlign: "center", margin: "0 0 28px" }}>Questions, answered.</h2>
+        <section ref={faqReveal.ref} id="faq" className={`scroll-reveal lift ${faqReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "80ms", maxWidth: 760, margin: "0 auto", padding: "0 clamp(18px, 4vw, 40px) clamp(48px, 6vw, 72px)" }}>
+          <h2 className={`scroll-reveal pop ${faqReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "160ms", fontFamily: "Newsreader, serif", fontWeight: 500, fontSize: "clamp(30px, 4vw, 44px)", letterSpacing: "-0.02em", textAlign: "center", margin: "0 0 28px" }}>Questions, answered.</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {FAQ.map((f, i) => {
               const open = openFaq === i;
               return (
-                <div key={f.q} style={{ background: "#fff", border: "1px solid rgb(234, 230, 221)", borderRadius: 16, overflow: "hidden" }}>
+                <div key={f.q} className={`scroll-reveal lift ${faqReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: `${250 + i * 110}ms`, background: "#fff", border: "1px solid rgb(234, 230, 221)", borderRadius: 16, overflow: "hidden" }}>
                   <button onClick={() => setOpenFaq(open ? -1 : i)} className="cursor-pointer" style={{ width: "100%", background: "transparent", border: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "18px 20px", textAlign: "left", color: "inherit" }}>
                     <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: "-0.01em" }}>{f.q}</span>
                     <span style={{ display: "inline-flex", flex: "0 0 auto", color: open ? "rgb(27, 26, 22)" : "rgb(154, 149, 139)", transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .25s ease" }}>
@@ -345,7 +404,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer style={{ borderTop: "1px solid rgb(232, 228, 219)" }}>
+      <footer ref={footerReveal.ref} className={`scroll-reveal fade-down ${footerReveal.visible ? "is-visible" : ""}`} style={{ ["--delay" as string]: "80ms", borderTop: "1px solid rgb(232, 228, 219)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "26px clamp(18px, 4vw, 40px)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 18 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
             <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: "-0.02em" }}>VoteNotes</span>
