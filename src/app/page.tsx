@@ -86,11 +86,13 @@ export default function Home() {
             <path d="M89 85l4 4 8-8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
 
-          <h1 className="font-serif text-5xl md:text-6xl text-[#111111] mb-4 leading-tight">
-            Decide together,<br />without the pressure.
+          <h1 className="font-serif text-5xl md:text-6xl text-[#111111] mb-4 leading-tight max-w-3xl">
+            Let your quiet members actually be heard.
           </h1>
-          <p className="text-[#555] text-lg max-w-md mb-10">
-            Suggest anonymously. Vote anonymously. See what the group actually thinks.
+          <p className="text-[#555] text-lg max-w-xl mb-10">
+            Built for small group and ministry leaders. Suggest ideas anonymously, vote
+            anonymously, and see what your group actually thinks — no signup, no awkward
+            silence in the room.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 mb-16">
@@ -118,6 +120,28 @@ export default function Home() {
           </div>
 
           {error && <p className="text-red-600 text-sm mb-6">{error}</p>}
+
+          {/* Problem line */}
+          <p className="text-[#777] text-base max-w-lg mb-16 italic">
+            Group decisions shouldn&apos;t happen over a 40-message text thread or get
+            steamrolled by whoever talks first.
+          </p>
+
+          {/* How it works */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl w-full mb-16">
+            {[
+              { step: "1", text: "Start a session — no account needed" },
+              { step: "2", text: "Everyone suggests anonymously" },
+              { step: "3", text: "Everyone votes anonymously" },
+            ].map((item) => (
+              <div key={item.step} className="flex flex-col items-center text-center gap-2">
+                <div className="font-serif text-3xl text-[#111111] w-12 h-12 flex items-center justify-center rounded-full border border-[#D9D9D9]">
+                  {item.step}
+                </div>
+                <div className="text-sm text-[#555]">{item.text}</div>
+              </div>
+            ))}
+          </div>
 
           {/* Use cases */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl w-full">
