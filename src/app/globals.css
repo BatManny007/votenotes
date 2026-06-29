@@ -37,12 +37,10 @@ body {
   from {
     opacity: 0;
     transform: translate3d(0, 18px, 0) scale(0.985);
-    filter: blur(8px);
   }
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -50,12 +48,10 @@ body {
   from {
     opacity: 0;
     transform: translate3d(0, -12px, 0);
-    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
-    filter: blur(0);
   }
 }
 
@@ -63,12 +59,10 @@ body {
   from {
     opacity: 0;
     transform: scale(0.94);
-    filter: blur(8px);
   }
   to {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 
@@ -76,12 +70,10 @@ body {
   0% {
     opacity: 0;
     transform: perspective(1200px) rotateX(8deg) scale(0.975);
-    filter: blur(7px);
   }
   100% {
     opacity: 1;
     transform: perspective(1200px) rotateX(0deg) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -89,12 +81,10 @@ body {
   0% {
     opacity: 0;
     transform: translate3d(0, 26px, 0);
-    filter: blur(8px);
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
-    filter: blur(0);
   }
 }
 
@@ -102,12 +92,10 @@ body {
   0% {
     opacity: 0;
     transform: translate3d(var(--from-x), var(--from-y), 0) rotate(var(--from-rot)) scale(0.92);
-    filter: blur(6px);
   }
   68% {
     opacity: 1;
     transform: translate3d(0, 0, 0) rotate(calc(var(--note-rot) + 2deg)) scale(1.012);
-    filter: blur(0);
   }
   84% {
     transform: translate3d(0, 0, 0) rotate(calc(var(--note-rot) - 1deg)) scale(0.996);
@@ -115,7 +103,6 @@ body {
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) rotate(var(--note-rot)) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -123,12 +110,10 @@ body {
   0% {
     opacity: 0;
     transform: translate3d(-50%, -34%, 0) scale(0.55) rotate(-16deg);
-    filter: blur(1px);
   }
   72% {
     opacity: 1;
     transform: translate3d(-50%, 2%, 0) scale(1.08) rotate(4deg);
-    filter: blur(0);
   }
   88% {
     transform: translate3d(-50%, -1%, 0) scale(0.98) rotate(-1deg);
@@ -136,7 +121,6 @@ body {
   100% {
     opacity: 1;
     transform: translate3d(-50%, 0, 0) scale(1) rotate(0deg);
-    filter: blur(0);
   }
 }
 
@@ -221,23 +205,19 @@ body {
 
 .scroll-reveal.lift {
   transform: translate3d(0, 26px, 0);
-  filter: blur(8px);
 }
 
 .scroll-reveal.pop {
   transform: scale(0.96);
-  filter: blur(7px);
 }
 
 .scroll-reveal.board {
   transform: perspective(1200px) rotateX(8deg) scale(0.975);
-  filter: blur(7px);
   transform-style: preserve-3d;
 }
 
 .scroll-reveal.fade-down {
   transform: translate3d(0, -12px, 0);
-  filter: blur(6px);
 }
 
 .scroll-reveal.is-visible.lift {
@@ -290,6 +270,5 @@ body {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
-    filter: none !important;
   }
 }
