@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import type { Session, Note } from "@/lib/database.types";
+import "./admin.css";
 
 type SearchParams = Promise<{ key?: string }>;
 
@@ -40,6 +41,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
     db
       .from("notes")
       .select("created_at")
+      // eslint-disable-next-line react-hooks/purity -- this Server Component builds a time-bounded report per request.
       .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()) as Promise<{ data: Pick<Note, "created_at">[] }>,
   ]);
 
@@ -77,57 +79,51 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
   const maxDay = Math.max(...Object.values(dayCounts), 1);
 
   return (
-    <main className="min-h-screen bg-[#FAFAF7] px-6 py-10 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-10">
-        <span className="font-serif text-2xl text-[#111111]">VoteNotes · Admin</span>
-        <span className="text-xs text-[#888] border border-[#D9D9D9] rounded-full px-3 py-1">Read-only</span>
+    <main className="admin-page">
+      <div className="admin-header">
+        <span>VoteNotes <i>Admin</i></span>
+        <span className="admin-badge">Read-only</span>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-10">
+      <div className="admin-stats">
         {[
           { label: "Total sessions", value: totalSessions ?? 0 },
           { label: "Total notes", value: totalNotes ?? 0 },
           { label: "Total votes", value: totalVotes ?? 0 },
         ].map((s) => (
-          <div key={s.label} className="bg-white border border-[#D9D9D9] rounded-xl p-6 text-center">
-            <div className="font-serif text-4xl text-[#111111] mb-1">{s.value}</div>
-            <div className="text-xs text-[#888] uppercase tracking-wide">{s.label}</div>
+          <div key={s.label} className="admin-stat">
+            <div>{s.value}</div><span>{s.label}</span>
           </div>
         ))}
       </div>
 
       {/* Notes per day bar chart */}
-      <div className="bg-white border border-[#D9D9D9] rounded-xl p-6 mb-6">
-        <h2 className="text-sm font-medium text-[#111111] mb-4 uppercase tracking-wide">Notes — last 7 days</h2>
-        <div className="flex items-end gap-2 h-24">
+      <div className="admin-card admin-chart">
+        <h2>Notes — last 7 days</h2><div className="admin-bars">
           {Object.entries(dayCounts).map(([day, count]) => (
-            <div key={day} className="flex-1 flex flex-col items-center gap-1">
-              <span className="text-[10px] text-[#888]">{count}</span>
+            <div key={day}><span>{count}</span>
               <div
-                className="w-full bg-[#111111] rounded-sm"
+                className="admin-bar"
                 style={{ height: `${Math.max((count / maxDay) * 80, count > 0 ? 4 : 2)}px` }}
               />
-              <span className="text-[9px] text-[#888]">
+              <small>
                 {new Date(day + "T12:00:00").toLocaleDateString("en", { weekday: "short" })}
-              </span>
+              </small>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="admin-columns">
         {/* Top sessions by notes */}
-        <div className="bg-white border border-[#D9D9D9] rounded-xl p-6">
-          <h2 className="text-sm font-medium text-[#111111] mb-4 uppercase tracking-wide">Top sessions by notes</h2>
+        <div className="admin-card"><h2>Top sessions by notes</h2>
           {topSessions.length === 0 ? (
-            <p className="text-sm text-[#888]">No data yet.</p>
+            <p className="admin-empty">No data yet.</p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="admin-list">
               {topSessions.map((s) => (
-                <li key={s.code} className="flex items-center justify-between text-sm">
-                  <span className="truncate text-[#333] max-w-[180px]">{s.name}</span>
-                  <span className="text-[#888] text-xs ml-2">{s.count} notes</span>
+                <li key={s.code}><span>{s.name}</span><small>{s.count} notes</small>
                 </li>
               ))}
             </ul>
@@ -135,25 +131,18 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
         </div>
 
         {/* Recent sessions */}
-        <div className="bg-white border border-[#D9D9D9] rounded-xl p-6">
-          <h2 className="text-sm font-medium text-[#111111] mb-4 uppercase tracking-wide">Recent sessions</h2>
+        <div className="admin-card"><h2>Recent sessions</h2>
           {!recentSessions?.length ? (
-            <p className="text-sm text-[#888]">No sessions yet.</p>
+            <p className="admin-empty">No sessions yet.</p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="admin-list admin-recent">
               {recentSessions.map((s) => (
-                <li key={s.id} className="flex items-center justify-between text-sm">
-                  <div className="flex flex-col">
-                    <span className="text-[#333] truncate max-w-[160px]">{s.name}</span>
-                    <span className="text-[10px] text-[#888] font-mono">{s.code}</span>
+                <li key={s.id}><div><span>{s.name}</span><small>{s.code}</small>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full ${s.closed ? "bg-[#F0F0F0] text-[#888]" : "bg-[#111] text-white"}`}>
+                  <div><span className={`admin-status ${s.closed ? "is-closed" : ""}`}>
                       {s.closed ? "closed" : "open"}
                     </span>
-                    <span className="text-[10px] text-[#aaa] mt-0.5">
-                      {new Date(s.created_at).toLocaleDateString()}
-                    </span>
+                    <small>{new Date(s.created_at).toLocaleDateString()}</small>
                   </div>
                 </li>
               ))}

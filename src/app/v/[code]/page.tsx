@@ -19,8 +19,8 @@ export default function SessionPage() {
   const [submitting, setSubmitting] = useState(false);
   const [sort, setSort] = useState<SortOrder>("votes");
   const [copied, setCopied] = useState(false);
-  const [isHost, setIsHost] = useState(false);
-  const [voterId, setVoterId] = useState("");
+  const [isHost] = useState(() => !!getHostKey(code));
+  const [voterId] = useState(() => getVoterId());
   const [notFound, setNotFound] = useState(false);
 
   const fetchNotes = useCallback(async (sessionId: string, vid: string) => {
@@ -48,9 +48,7 @@ export default function SessionPage() {
   }, []);
 
   useEffect(() => {
-    const vid = getVoterId();
-    setVoterId(vid);
-    setIsHost(!!getHostKey(code));
+    const vid = voterId;
 
     supabase
       .from("sessions")
@@ -77,7 +75,7 @@ export default function SessionPage() {
 
         return () => { supabase.removeChannel(channel); };
       });
-  }, [code, fetchNotes]);
+  }, [code, fetchNotes, voterId]);
 
   const sorted = [...notes].sort((a, b) => {
     if (sort === "votes") return b.vote_count - a.vote_count;
