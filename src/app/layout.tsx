@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VoteNotes — Suggest anonymously. Vote anonymously. Decide together.",
-  description: "An anonymous collaborative decision-making platform for groups.",
+  title: "VoteNotes | Simple, anonymous voting for groups",
+  description: "The easiest way for groups to share honest ideas and vote on what to do next without any hassle or sign up.",
 };
 
 export default function RootLayout({

@@ -118,8 +118,8 @@ export default function SessionPage() {
               <circle cx="12" cy="12" r="9" strokeWidth="2" />
             </svg>
           </span>
-          <h1>Session not found</h1>
-          <p>This session may have expired, or the code is incorrect.</p>
+          <h1>Room not found</h1>
+          <p>We could not find this session. Please check the code or ask your host for the invite link.</p>
           <button onClick={() => router.push("/")} className="vote-button vote-button-primary">
             Go home
           </button>
@@ -131,7 +131,7 @@ export default function SessionPage() {
   if (!session) {
     return (
       <main className="vote-app vote-empty-state">
-        <div className="vote-loading">Loading your session…</div>
+        <div className="vote-loading">Loading room...</div>
       </main>
     );
   }
@@ -151,7 +151,7 @@ export default function SessionPage() {
               VoteNotes
             </button>
             <div className="vote-session-code">
-              <span>Session code</span>
+              <span>Room code</span>
               <strong>{code}</strong>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function SessionPage() {
             <div className="vote-title-block">
               <div className={`vote-status ${session.closed ? "is-closed" : ""}`}>
                 <span />
-                {session.closed ? "Results are final" : "Voting is open"}
+                {session.closed ? "Voting closed" : "Voting is open"}
               </div>
               <h1>{session.name}</h1>
               {session.description && <p>{session.description}</p>}
@@ -187,13 +187,13 @@ export default function SessionPage() {
               </svg>
             </div>
             <div className="vote-compose-main">
-              <label htmlFor="suggestion">Add a suggestion</label>
+              <label htmlFor="suggestion">Add your suggestion</label>
               <div className="vote-compose-input-row">
                 <input
                   id="suggestion"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="What should the group consider?"
+                  placeholder="What idea should the group consider?"
                 />
                 <button
                   type="submit"
@@ -213,8 +213,8 @@ export default function SessionPage() {
               <p className="vote-eyebrow">Group ideas</p>
               <h2>
                 {notes.length === 0
-                  ? "Waiting for the first idea"
-                  : `${notes.length} idea${notes.length === 1 ? "" : "s"} on the board`}
+                  ? "Waiting for ideas"
+                  : `${notes.length} idea${notes.length === 1 ? "" : "s"} submitted`}
               </h2>
             </div>
             {notes.length > 1 && (
@@ -241,8 +241,8 @@ export default function SessionPage() {
                   <path d="M12 9v6" />
                 </svg>
               </div>
-              <h3>The board is ready.</h3>
-              <p>Share the first anonymous idea to get the conversation started.</p>
+              <h3>No ideas yet</h3>
+              <p>Be the first to share a suggestion. Type an idea above to get things started.</p>
             </div>
           ) : (
             <div className="vote-notes-grid">
@@ -261,7 +261,7 @@ export default function SessionPage() {
 
         {session.closed && notes.length > 0 && (
           <div className="vote-results-note">
-            The highest-ranked idea is at the top. Thanks for making a decision together.
+            Voting is closed. The group top choice is pinned at the top.
           </div>
         )}
       </div>
@@ -284,8 +284,8 @@ function NoteCard({
     <article className={`vote-note-card ${note.user_voted ? "is-voted" : ""} ${rank === 1 ? "is-leading" : ""}`}>
       <div className="vote-note-meta">
         {rank
-          ? <span className={rank === 1 ? "vote-rank vote-rank-leading" : "vote-rank"}>#{rank}{rank === 1 ? " · leading" : ""}</span>
-          : <span>Anonymous idea</span>
+          ? <span className={rank === 1 ? "vote-rank vote-rank-leading" : "vote-rank"}>#{rank} {rank === 1 ? "Top choice" : ""}</span>
+          : <span>Private idea</span>
         }
         <time>{new Date(note.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</time>
       </div>
