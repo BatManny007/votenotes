@@ -61,7 +61,6 @@ export default function SessionPage() {
         setSession(data);
         fetchNotes(data.id, vid);
 
-        // Realtime
         const channel = supabase
           .channel(`session-${data.id}`)
           .on("postgres_changes", { event: "*", schema: "public", table: "notes", filter: `session_id=eq.${data.id}` },
@@ -117,7 +116,7 @@ export default function SessionPage() {
           <h1>Session not found</h1>
           <p>This session may have expired, or the code is incorrect.</p>
           <button onClick={() => router.push("/")} className="vote-button vote-button-primary">
-          Go home
+            Go home
           </button>
         </div>
       </main>
@@ -138,30 +137,28 @@ export default function SessionPage() {
         <div className="vote-page-width">
           <div className="vote-topline">
             <button onClick={() => router.push("/")} className="vote-back-link">
-              <span aria-hidden="true">←</span> VoteNotes
+              ← VoteNotes
             </button>
-            <div className="vote-session-code"><span>Session code</span><strong>{code}</strong></div>
+            <div className="vote-session-code">
+              <span>Session code</span>
+              <strong>{code}</strong>
+            </div>
           </div>
           <div className="vote-title-row">
             <div className="vote-title-block">
               <div className={`vote-status ${session.closed ? "is-closed" : ""}`}>
-                <span />{session.closed ? "Results are final" : "Voting is open"}
+                <span />
+                {session.closed ? "Results are final" : "Voting is open"}
               </div>
               <h1>{session.name}</h1>
               {session.description && <p>{session.description}</p>}
             </div>
             <div className="vote-header-actions">
-              <button
-                onClick={copyLink}
-                className="vote-button vote-button-secondary"
-              >
-                {copied ? "Link copied" : "Copy invite link"}
+              <button onClick={copyLink} className="vote-button vote-button-secondary">
+                {copied ? "✓ Link copied" : "Copy invite link"}
               </button>
               {isHost && !session.closed && (
-                <button
-                  onClick={handleClose}
-                  className="vote-button vote-button-danger"
-                >
+                <button onClick={handleClose} className="vote-button vote-button-danger">
                   Close voting
                 </button>
               )}
@@ -183,7 +180,11 @@ export default function SessionPage() {
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="What should the group consider?"
                 />
-                <button type="submit" disabled={submitting || !content.trim()} className="vote-button vote-button-primary">
+                <button
+                  type="submit"
+                  disabled={submitting || !content.trim()}
+                  className="vote-button vote-button-primary"
+                >
                   {submitting ? "Adding…" : "Add idea"}
                 </button>
               </div>
@@ -195,37 +196,52 @@ export default function SessionPage() {
           <div className="vote-ideas-heading">
             <div>
               <p className="vote-eyebrow">Group ideas</p>
-              <h2>{notes.length === 0 ? "Waiting for the first idea" : `${notes.length} idea${notes.length === 1 ? "" : "s"} on the board`}</h2>
+              <h2>
+                {notes.length === 0
+                  ? "Waiting for the first idea"
+                  : `${notes.length} idea${notes.length === 1 ? "" : "s"} on the board`}
+              </h2>
             </div>
-            {notes.length > 1 && <div className="vote-sort" aria-label="Sort ideas">
-            {(["votes", "newest", "oldest"] as SortOrder[]).map((s) => (
-              <button
-                key={s}
-                onClick={() => setSort(s)}
-                className={sort === s ? "is-active" : ""}
-              >
-                {s === "votes" ? "Most votes" : s === "newest" ? "Newest" : "Oldest"}
-              </button>
-            ))}
-            </div>}
+            {notes.length > 1 && (
+              <div className="vote-sort" aria-label="Sort ideas">
+                {(["votes", "newest", "oldest"] as SortOrder[]).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSort(s)}
+                    className={sort === s ? "is-active" : ""}
+                  >
+                    {s === "votes" ? "Most votes" : s === "newest" ? "Newest" : "Oldest"}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {notes.length === 0 ? (
             <div className="vote-blank-board">
-              <div className="vote-blank-icon">☼</div>
+              <div className="vote-blank-icon">◎</div>
               <h3>The board is ready.</h3>
               <p>Share the first anonymous idea to get the conversation started.</p>
             </div>
           ) : (
             <div className="vote-notes-grid">
               {sorted.map((note, i) => (
-                <NoteCard key={note.id} note={note} rank={sort === "votes" ? i + 1 : undefined} closed={session.closed} onVote={() => handleVote(note)} />
+                <NoteCard
+                  key={note.id}
+                  note={note}
+                  rank={sort === "votes" ? i + 1 : undefined}
+                  closed={session.closed}
+                  onVote={() => handleVote(note)}
+                />
               ))}
             </div>
           )}
         </section>
+
         {session.closed && notes.length > 0 && (
-          <div className="vote-results-note">The highest-ranked idea is at the top. Thanks for making a decision together.</div>
+          <div className="vote-results-note">
+            The highest-ranked idea is at the top. Thanks for making a decision together.
+          </div>
         )}
       </div>
     </main>
@@ -246,7 +262,10 @@ function NoteCard({
   return (
     <article className={`vote-note-card ${note.user_voted ? "is-voted" : ""} ${rank === 1 ? "is-leading" : ""}`}>
       <div className="vote-note-meta">
-        {rank ? <span className={rank === 1 ? "vote-rank vote-rank-leading" : "vote-rank"}>#{rank}{rank === 1 ? " leading" : ""}</span> : <span>Anonymous idea</span>}
+        {rank
+          ? <span className={rank === 1 ? "vote-rank vote-rank-leading" : "vote-rank"}>#{rank}{rank === 1 ? " · leading" : ""}</span>
+          : <span>Anonymous idea</span>
+        }
         <time>{new Date(note.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</time>
       </div>
       <p>{note.content}</p>
