@@ -112,7 +112,12 @@ export default function SessionPage() {
     return (
       <main className="vote-app vote-empty-state">
         <div className="vote-empty-card">
-          <span className="vote-brand-mark">✓</span>
+          <span className="vote-brand-mark">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 12 2 2 4-4" />
+              <circle cx="12" cy="12" r="9" strokeWidth="2" />
+            </svg>
+          </span>
           <h1>Session not found</h1>
           <p>This session may have expired, or the code is incorrect.</p>
           <button onClick={() => router.push("/")} className="vote-button vote-button-primary">
@@ -137,7 +142,13 @@ export default function SessionPage() {
         <div className="vote-page-width">
           <div className="vote-topline">
             <button onClick={() => router.push("/")} className="vote-back-link">
-              ← VoteNotes
+              <span className="vote-brand-mark-sm">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 12 2 2 4-4" />
+                  <circle cx="12" cy="12" r="9" strokeWidth="2" />
+                </svg>
+              </span>
+              VoteNotes
             </button>
             <div className="vote-session-code">
               <span>Session code</span>
@@ -155,7 +166,7 @@ export default function SessionPage() {
             </div>
             <div className="vote-header-actions">
               <button onClick={copyLink} className="vote-button vote-button-secondary">
-                {copied ? "✓ Link copied" : "Copy invite link"}
+                {copied ? "Link copied" : "Copy invite link"}
               </button>
               {isHost && !session.closed && (
                 <button onClick={handleClose} className="vote-button vote-button-danger">
@@ -170,7 +181,11 @@ export default function SessionPage() {
       <div className="vote-page-width vote-content">
         {!session.closed && (
           <form onSubmit={handleSubmit} className="vote-compose">
-            <div className="vote-compose-icon">✦</div>
+            <div className="vote-compose-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </div>
             <div className="vote-compose-main">
               <label htmlFor="suggestion">Add a suggestion</label>
               <div className="vote-compose-input-row">
@@ -219,7 +234,13 @@ export default function SessionPage() {
 
           {notes.length === 0 ? (
             <div className="vote-blank-board">
-              <div className="vote-blank-icon">◎</div>
+              <div className="vote-blank-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2" />
+                  <path d="M9 12h6" />
+                  <path d="M12 9v6" />
+                </svg>
+              </div>
               <h3>The board is ready.</h3>
               <p>Share the first anonymous idea to get the conversation started.</p>
             </div>
@@ -275,7 +296,6 @@ function NoteCard({
           disabled={note.user_voted || closed}
           className="vote-vote-button"
         >
-          <span aria-hidden="true">{note.user_voted ? "✓" : "↑"}</span>
           {note.user_voted ? "Voted" : "Vote"} <strong>{note.vote_count}</strong>
         </button>
         <span className="vote-anonymous">Anonymous</span>

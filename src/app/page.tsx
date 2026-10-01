@@ -6,9 +6,43 @@ import { supabase } from "@/lib/supabase";
 import { generateCode, setHostKey } from "@/lib/utils";
 
 const FEATURES = [
-  ["01", "Invite anyone", "A short session code and one link are all your group needs."],
-  ["02", "Collect honest ideas", "Suggestions arrive without names, status, or second-guessing."],
-  ["03", "Find the signal", "Live voting makes the next step obvious when you are ready."],
+  {
+    number: "01",
+    title: "Invite anyone",
+    text: "A short session code and one link are all your group needs.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+  },
+  {
+    number: "02",
+    title: "Collect honest ideas",
+    text: "Suggestions arrive without names, status, or second-guessing.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="18" height="18" x="3" y="3" rx="2" />
+        <path d="M9 12h6" />
+        <path d="M12 9v6" />
+      </svg>
+    ),
+  },
+  {
+    number: "03",
+    title: "Find the signal",
+    text: "Live voting makes the next step obvious when you are ready.",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 20v-6" />
+        <path d="M6 20V10" />
+        <path d="M18 20V4" />
+      </svg>
+    ),
+  },
 ];
 
 const FAQ = [
@@ -70,7 +104,7 @@ export default function Home() {
         <SiteHeader onCreate={openCreate} />
         <section className="create-layout">
           <button className="back-control" onClick={() => { setError(""); setView("home"); }}>
-            ← Back to home
+            Back to home
           </button>
           <div className="create-intro">
             <span className="eyebrow">New session</span>
@@ -111,7 +145,7 @@ export default function Home() {
             </div>
             {error && <p className="form-error">{error}</p>}
             <button className="button button-dark button-wide" type="submit" disabled={loading || !name.trim()}>
-              {loading ? "Creating session…" : "Create session →"}
+              {loading ? "Creating session…" : "Create session"}
             </button>
             <p className="form-footnote">No accounts. Everyone can join instantly.</p>
           </form>
@@ -132,13 +166,13 @@ export default function Home() {
           <p>Give every person in the group a voice. VoteNotes turns scattered opinions into a confident decision — anonymously.</p>
           <div className="hero-actions">
             <button className="button button-dark" onClick={openCreate}>
-              Create a session <span>→</span>
+              Create a session
             </button>
-            <a href="#how">How it works <span>↓</span></a>
+            <a href="#how">How it works</a>
           </div>
           <div className="hero-meta">
-            <span>✦ No sign-up needed</span>
-            <span>◌ Private by default</span>
+            <span>No sign-up needed</span>
+            <span>Private by default</span>
           </div>
         </div>
 
@@ -153,12 +187,15 @@ export default function Home() {
               <h2>Where should we go for our team day?</h2>
               <p>12 people deciding</p>
             </div>
-            <button>↗</button>
+            <div className="product-pill-tag">Live</div>
           </div>
           <div className="product-composer">
-            <span>✦</span>
+            <span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </span>
             <p>Add an anonymous idea</p>
-            <b>+</b>
           </div>
           <div className="product-ideas">
             <PreviewIdea rank="01" text="A day by the sea" votes="8" leading />
@@ -185,7 +222,7 @@ export default function Home() {
             placeholder="ENTER CODE"
             maxLength={8}
           />
-          <button type="submit">Join session →</button>
+          <button type="submit">Join session</button>
         </form>
         {error && <p className="form-error">{error}</p>}
       </section>
@@ -207,14 +244,14 @@ export default function Home() {
           <h2>From "what does everyone think?" to a clear next step.</h2>
         </div>
         <div className="feature-grid">
-          {FEATURES.map(([number, title, text]) => (
-            <article key={number}>
+          {FEATURES.map((feat) => (
+            <article key={feat.number}>
               <div>
-                <span>{number}</span>
-                <b>↗</b>
+                <span>{feat.number}</span>
+                <b>{feat.icon}</b>
               </div>
-              <h3>{title}</h3>
-              <p>{text}</p>
+              <h3>{feat.title}</h3>
+              <p>{feat.text}</p>
             </article>
           ))}
         </div>
@@ -252,7 +289,7 @@ export default function Home() {
       <footer className="site-footer">
         <a className="site-brand" href="#top"><Logo /> VoteNotes</a>
         <p>Better decisions, together.</p>
-        <button onClick={openCreate}>Start a session →</button>
+        <button onClick={openCreate}>Start a session</button>
       </footer>
     </main>
   );
@@ -266,13 +303,20 @@ function SiteHeader({ onCreate }: { onCreate: () => void }) {
         <a href="#how">How it works</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <button className="header-cta" onClick={onCreate}>Create a session <span>↗</span></button>
+      <button className="header-cta" onClick={onCreate}>Create a session</button>
     </header>
   );
 }
 
-function Logo() {
-  return <i className="brand-symbol" aria-hidden="true">✓</i>;
+export function Logo() {
+  return (
+    <span className="brand-symbol" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m9 12 2 2 4-4" />
+        <circle cx="12" cy="12" r="9" strokeWidth="2" />
+      </svg>
+    </span>
+  );
 }
 
 function PreviewIdea({ rank, text, votes, leading = false }: { rank: string; text: string; votes: string; leading?: boolean }) {
@@ -283,7 +327,9 @@ function PreviewIdea({ rank, text, votes, leading = false }: { rank: string; tex
         {leading && <b>Leading</b>}
       </div>
       <p>{text}</p>
-      <button>↑ {votes}</button>
+      <button>
+        <span className="vote-badge-count">{votes}</span> votes
+      </button>
     </article>
   );
 }
